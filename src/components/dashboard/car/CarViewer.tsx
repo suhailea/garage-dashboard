@@ -7,10 +7,10 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { motion } from "framer-motion";
 import { Suspense, useEffect } from "react";
 import { Cardetails } from "./Cardetails";
-import Uicard from "@/components/Uicard";
-import { motion } from "framer-motion";
+import Uicard from "@/components/shared/Uicard";
 
 const CarModel = () => {
   const gltf = useGLTF("/mercedes_g_wagon.glb");
@@ -22,7 +22,7 @@ const CarModel = () => {
 
   return (
     <Center>
-      <primitive object={gltf.scene} scale={0.5} />
+      <primitive object={gltf.scene} scale={0.5} rotation={[0, Math.PI, 0]} />
     </Center>
   );
 };
@@ -49,7 +49,11 @@ export function CarViewer() {
                 <Bounds fit clip observe margin={1.2}>
                   <CarModel />
                 </Bounds>
-                <OrbitControls target={[0, 0, 0]} />
+                <OrbitControls
+                  target={[0, 0, 0]}
+                  autoRotate
+                  autoRotateSpeed={1.5}
+                />
               </Suspense>
             </Canvas>
           </div>

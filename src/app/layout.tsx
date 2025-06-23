@@ -1,8 +1,9 @@
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Navbar from "@/layouts/layouts/Navbar";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../styles/globals.css";
+import { ThemeProvider } from "@/components/shared/ThemeProvider";
+import Navbar from "@/layouts/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,17 +39,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex h-screen w-full overflow-hidden">
+          <div className="flex h-screen w-full">
             {/* Sidebar - Fixed on the left */}
-            {/* <Sidebar /> */}
             
             {/* Main content area - Takes remaining width */}
-            <div className="flex flex-col flex-1 h-full overflow-auto">
+            <div className="flex flex-col flex-1 min-w-0">
               {/* Navbar - Fixed at the top of the content area */}
               <Navbar />
               
               {/* Page content - Scrollable */}
-              <main className="flex-1 p-4 overflow-auto bg-white dark:bg-gray-950">
+              <main className="flex-1 p-4 bg-white dark:bg-gray-950">
                 {children}
               </main>
             </div>

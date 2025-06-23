@@ -43,7 +43,7 @@ export default function RewardPoints() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="rounded-r-lg bg-gradient-to-br from-indigo-50 to-white dark:from-gray-800 dark:to-gray-900 border border-indigo-100 dark:border-gray-800 p-4 shadow flex flex-col items-center w-full max-w-xs mx-auto h-full"
+      className="rounded-r-lg bg-gradient-to-br from-indigo-50 to-white dark:from-gray-800 dark:to-gray-900 border-indigo-100 dark:border-gray-800 p-4 flex flex-col items-center w-full max-w-xs mx-auto h-full"
     >
       <div className="flex items-center gap-2 mb-2 w-full justify-between">
         <div className="flex items-center">

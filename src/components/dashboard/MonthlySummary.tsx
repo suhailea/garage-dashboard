@@ -8,11 +8,10 @@ import {
   LineElement,
   PointElement,
   Tooltip,
+  BarElement,
 } from "chart.js";
 import { useRef, useEffect } from "react";
-import RewardPoints from "./RewardPoints";
 import { motion } from "framer-motion";
-import Uicard from "../Uicard";
 
 ChartJS.register(
   CategoryScale,
@@ -21,10 +20,13 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
+  BarElement
 );
 
 import { useMonthlySummaryStore } from "@/store/monthlySummaryStore";
+import RewardPoints from "./RewardPoints";
+import Uicard from "../shared/Uicard";
 
 const chartOptions = {
   responsive: true,
@@ -45,6 +47,7 @@ const chartOptions = {
 
 export default function MonthlyPointsChart() {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const { monthlySummary, fetchMonthlySummary } = useMonthlySummaryStore();
 
   useEffect(() => {
@@ -53,46 +56,53 @@ export default function MonthlyPointsChart() {
 
   useEffect(() => {
     let chartInstance: ChartJS | null = null;
-    if (chartRef.current && monthlySummary.length > 0) {
-      chartInstance = new ChartJS(chartRef.current, {
-        type: "line",
+    const currentCanvas = chartRef.current;
+    const containerEl = containerRef.current;
+
+    if (currentCanvas && monthlySummary.length > 0) {
+      chartInstance = new ChartJS(currentCanvas, {
+        type: "bar",
         data: {
           labels: monthlySummary.map((d) => d.month),
           datasets: [
             {
               label: "Points",
               data: monthlySummary.map((d) => d.points),
-              fill: true,
-              backgroundColor: "rgba(59, 130, 246, 0.15)",
-              borderColor: "#3b82f6",
-              tension: 0.4,
+              backgroundColor: "#3b82f6",
             },
             {
               label: "Bonus",
               data: monthlySummary.map((d) => d.bonus),
-              fill: true,
-              backgroundColor: "rgba(16, 185, 129, 0.10)",
-              borderColor: "#10b981",
-              tension: 0.4,
+              backgroundColor: "#10b981",
             },
             {
               label: "Redeemed",
               data: monthlySummary.map((d) => d.redeemed),
-              fill: true,
-              backgroundColor: "rgba(245, 158, 66, 0.10)",
-              borderColor: "#f59e42",
-              tension: 0.4,
+              backgroundColor: "#f59e42",
             },
           ],
         },
         options: chartOptions,
       });
-    }
-    return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
+
+      let resizeObserver: ResizeObserver | null = null;
+
+      if (containerEl && chartInstance) {
+        resizeObserver = new ResizeObserver(() => {
+          if (chartInstance) chartInstance.resize();
+        });
+        resizeObserver.observe(containerEl);
       }
-    };
+
+      return () => {
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        if (resizeObserver && containerEl) {
+          resizeObserver.disconnect();
+        }
+      };
+    }
   }, [monthlySummary]);
 
   return (
@@ -102,21 +112,19 @@ export default function MonthlyPointsChart() {
       transition={{ duration: 0.7 }}
       className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 w-full rounded-lg"
     >
-      <div className="w-full flex items-start">
-        <Uicard
-          title="Monthly Points Summary"
-          description="Monthly Points summary for the year 2025"
-          style="border-none shadow-none"
-        >
-          <div className="bg-white dark:bg-gray-900 p-2">
-            <canvas ref={chartRef} width={680} height={320} />
-          </div>
-        </Uicard>
-        <div
-          style={{
-            height: "473px",
-          }}
-        >
+      <div className="w-full flex flex-col lg:flex-row items-stretch gap-4">
+        <div className="w-full lg:w-3/4" ref={containerRef}>
+          <Uicard
+            title="Monthly Points Summary"
+            description="Monthly Points summary for the year 2025"
+            style="border-none shadow-none"
+          >
+            <div className="bg-white dark:bg-gray-900 p-2 w-full">
+              <canvas ref={chartRef} className="w-full h-[320px] min-w-0" />
+            </div>
+          </Uicard>
+        </div>
+        <div className="w-full lg:w-1/4" style={{ height: "473px" }}>
           <RewardPoints />
         </div>
       </div>
