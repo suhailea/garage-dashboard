@@ -1,28 +1,8 @@
 "use client";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Tooltip,
-  BarElement,
-} from "chart.js";
+
+import { Chart as ChartJS } from "chart.js/auto"; // ✅ Auto-registers everything
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend,
-  BarElement
-);
 
 import { useMonthlySummaryStore } from "@/store/monthlySummaryStore";
 import RewardPoints from "./RewardPoints";
