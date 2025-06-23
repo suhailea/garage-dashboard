@@ -1,42 +1,63 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
+import { Chart, ArcElement, Tooltip } from "chart.js";
 import { Gift, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRewardStore } from "@/store/rewardStore";
+import { useEffect, useRef } from "react";
 
-ChartJS.register(ArcElement, Tooltip);
+Chart.register(ArcElement, Tooltip);
 
 export default function RewardPoints() {
   const { points, nextMilestone } = useRewardStore();
   const remaining = nextMilestone - points;
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstance = useRef<Chart | null>(null);
 
-  const data = {
-    datasets: [
-      {
-        data: [points, remaining],
-        backgroundColor: ["#6366f1", "#e0e7ff"],
-        borderWidth: 0,
-        cutout: "75%",
-      },
-    ],
-  };
+  useEffect(() => {
+    if (!chartRef.current) return;
 
-  const options = {
-    cutout: "75%",
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-    },
-    elements: {
-      arc: {
-        borderRadius: 20,
+    // Destroy existing chart if it exists
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+
+    // Create new chart
+    const ctx = chartRef.current.getContext('2d');
+    if (!ctx) return;
+
+    chartInstance.current = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [points, remaining],
+          backgroundColor: ["#6366f1", "#e0e7ff"],
+          borderWidth: 0,
+        }]
       },
-    },
-    maintainAspectRatio: false,
-  };
+      options: {
+        cutout: '75%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+        elements: {
+          arc: {
+            borderRadius: 20,
+          },
+        },
+        maintainAspectRatio: false,
+      }
+    });
+
+    // Cleanup function
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [points, remaining]);
 
   return (
     <motion.div
@@ -62,7 +83,7 @@ export default function RewardPoints() {
         className="flex flex-col items-center mb-4 relative"
         style={{ width: 120, height: 120 }}
       >
-        <Doughnut data={data} options={options} />
+        <canvas ref={chartRef} />
         {/* Centered points text */}
         <span className="absolute inset-0 flex items-center justify-center text-2xl font-bold text-indigo-800 dark:text-indigo-200">
           {points}

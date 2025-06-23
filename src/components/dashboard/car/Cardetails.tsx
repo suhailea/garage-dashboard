@@ -1,3 +1,4 @@
+"use client"
 import { useCarDetailsStore } from "@/store/carDetailsStore";
 import { Car, CheckCircle, Gauge, Settings, Wrench, Sparkles, Calendar } from "lucide-react";
 import { useEffect } from "react";

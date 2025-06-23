@@ -25,32 +25,38 @@ export default function Home() {
         {/* Responsive grid: stack on mobile, 2 columns on md+, sidebar on lg+ */}
         <div className="flex flex-col lg:flex-row lg:items-start gap-4">
           {/* Banner - Always first on mobile */}
-          <div className="w-full order-first lg:hidden">
+          <div className="w-full order-1 lg:hidden">
             <Banner />
           </div>
 
+          {/* UserProfile - Second on mobile */}
+          <div className="w-full order-2 lg:hidden">
+            <UserProfile />
+          </div>
+
+          {/* Car Viewer - Third on mobile, sidebar on lg+ */}
+          <div className="w-full lg:w-96 order-3 lg:order-2 flex-shrink-0">
+            <CarViewer />
+          </div>
+
           {/* Main content */}
-          <div className="flex-1 flex flex-col gap-4 order-3 lg:order-1 min-w-0">
-            {/* Hero and Profile section */}
-            <div className="flex flex-col md:flex-row gap-4 lg:gap-8 w-full">
-              <div className="hidden lg:block flex-1 min-w-0">
+          <div className="flex-1 flex flex-col gap-4 order-4 lg:order-1 min-w-0">
+            {/* Hero and Profile section - desktop only */}
+            <div className="hidden lg:flex flex-col md:flex-row gap-4 lg:gap-8 w-full">
+              <div className="flex-1 min-w-0">
                 <Banner />
               </div>
               <div className="flex-1 min-w-0">
                 <UserProfile />
               </div>
             </div>
-            <div className="order-4 lg:order-none">
+            
+            <div className="order-5 lg:order-none">
               <Benefits />
             </div>
-            <div className="order-5 lg:order-none">
+            <div className="order-6 lg:order-none">
               <MonthlyPointsChart />
             </div>
-          </div>
-
-          {/* Car Viewer - Second on mobile, sidebar on lg+ */}
-          <div className="w-full lg:w-96 order-2 lg:order-2 flex-shrink-0">
-            <CarViewer />
           </div>
         </div>
       </div>

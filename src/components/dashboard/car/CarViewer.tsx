@@ -35,8 +35,8 @@ export function CarViewer() {
       transition={{ duration: 0.7 }}
     >
       <Uicard
-        title="Monthly Points Summary"
-        description="Monthly Points summary for the year 2025"
+        title="Vehicle Details"
+        description="View your car in 3D and see all its details, status, and upcoming service information."
         style="border-none h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg"
       >
         <div className="rounded-t-md h-full">
